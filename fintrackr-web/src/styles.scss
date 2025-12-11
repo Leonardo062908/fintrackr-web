@@ -1,0 +1,142 @@
+/* ============================================
+   FinTrackr - Global Theme Variables
+   ============================================ */
+
+// Cores principais
+:root {
+  // Primary colors
+  --ft-primary: #6366f1; // Indigo
+  --ft-primary-dark: #4f46e5;
+  --ft-primary-light: #818cf8;
+
+  // Background colors
+  --ft-bg: #050816;
+  --ft-bg-secondary: #0a0f1f;
+  --ft-surface: rgba(255, 255, 255, 0.03);
+  --ft-surface-elevated: rgba(255, 255, 255, 0.05);
+
+  // Text colors
+  --ft-text: #f5f5f5;
+  --ft-text-secondary: rgba(255, 255, 255, 0.7);
+  --ft-text-muted: rgba(255, 255, 255, 0.5);
+
+  // Accent colors
+  --ft-accent: #10b981; // Green
+  --ft-accent-error: #ef4444; // Red
+  --ft-accent-warning: #f59e0b; // Amber
+  --ft-accent-info: #3b82f6; // Blue
+
+  // Border colors
+  --ft-border: rgba(255, 255, 255, 0.06);
+  --ft-border-light: rgba(255, 255, 255, 0.03);
+
+  // Glass effect
+  --ft-glass-bg: rgba(255, 255, 255, 0.02);
+  --ft-glass-border: rgba(255, 255, 255, 0.06);
+  --ft-glass-blur: blur(6px);
+}
+
+/* ============================================
+   Base Styles
+   ============================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--ft-bg);
+  color: var(--ft-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+app-root {
+  flex: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================
+   Typography
+   ============================================ */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ft-text);
+}
+
+h1 {
+  font-size: 2rem;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
+p {
+  margin: 0;
+  line-height: 1.6;
+  color: var(--ft-text-secondary);
+}
+
+/* ============================================
+   Utility Classes
+   ============================================ */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+
+  @media (max-width: 768px) {
+    padding: 0 1rem;
+  }
+}
+
+/* ============================================
+   Scrollbar Styling
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ft-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ft-border);
+  border-radius: 4px;
+
+  &:hover {
+    background: var(--ft-border-light);
+  }
+}
