@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-ft-page-header',
   imports: [],
   templateUrl: './ft-page-header.component.html',
-  styleUrl: './ft-page-header.component.scss'
+  styleUrl: './ft-page-header.component.scss',
 })
 export class FtPageHeaderComponent {
-
+  @Input() title!: string;
+  @Input() subtitle?: string;
 }

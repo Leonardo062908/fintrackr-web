@@ -1,0 +1,14 @@
+.ft-page-header {
+  margin-bottom: 2rem;
+
+  &__title {
+    font-size: 2rem;
+    margin-bottom: 0.25rem;
+    color: var(--ft-text);
+  }
+  &__subtitle {
+    color: var(--ft-text-secondary);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+}
