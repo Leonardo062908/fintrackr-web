@@ -18,6 +18,27 @@ export const routes: Routes = [
             (m) => m.DashboardComponent
           ),
       },
+      {
+        path: 'transactions',
+        loadComponent: () =>
+          import('./features/transactions/transactions.component').then(
+            (m) => m.TransactionsComponent
+          ),
+      },
+      {
+        path: 'goals',
+        loadComponent: () =>
+          import('./features/goals/goals.component').then(
+            (m) => m.GoalsComponent
+          ),
+      },
+      {
+        path: 'settings',
+        loadComponent: () =>
+          import('./features/settings/settings.component').then(
+            (m) => m.SettingsComponent
+          ),
+      },
       // Futuras rotas que usam o layout principal:
       // { path: 'accounts', loadComponent: () => import('./features/accounts/account-list.component').then(m => m.AccountListComponent) },
       // { path: 'transactions', loadComponent: () => import('./features/transactions/transaction-list.component').then(m => m.TransactionListComponent) },
