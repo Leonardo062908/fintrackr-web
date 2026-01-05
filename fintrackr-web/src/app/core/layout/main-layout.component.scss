@@ -60,3 +60,45 @@
     padding: 0 1rem;
   }
 }
+
+.main-nav {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    gap: 1rem;
+  }
+
+  a {
+    color: var(--ft-text-secondary);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    transition: color 0.2s ease;
+    position: relative;
+
+    &:hover {
+      color: var(--ft-text);
+    }
+
+    &.active {
+      color: var(--ft-primary);
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--ft-primary);
+      }
+    }
+
+    @media (max-width: 768px) {
+      font-size: 0.85rem;
+    }
+  }
+}
