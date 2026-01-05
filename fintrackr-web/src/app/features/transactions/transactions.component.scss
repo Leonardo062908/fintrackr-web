@@ -1,0 +1,14 @@
+.transactions {
+  width: 100%;
+}
+
+.transactions__placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  background-color: var(--ft-bg-secondary);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
