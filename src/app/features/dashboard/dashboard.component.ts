@@ -5,7 +5,7 @@ import { FtPageHeaderComponent } from '../../shared/ui/pageheader/ft-page-header
 
 @Component({
   selector: 'app-dashboard',
-  imports: [],
+  imports: [FtCardComponent, FtPageHeaderComponent, CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
