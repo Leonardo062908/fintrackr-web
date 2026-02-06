@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DashboardComponent } from './dashboard.component';
 import { FtPageHeaderComponent } from '../../shared/ui/pageheader/ft-page-header/ft-page-header.component';
-import { FtCardComponent } from '../../shared/ui/cards/ft-card.component';
+import { FtCardComponent } from '../../shared/ui/cards/ft-card/ft-card.component';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
