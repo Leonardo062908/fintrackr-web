@@ -7,18 +7,26 @@ import { MonthlySummary } from '../models/monthly-summary.model';
 })
 export class DashboardMockService {
   //Dados simulados de resumo mensal
-  private sampleSummary: MonthlySummary = {
-    //Aqui eu defino os dados simulados
-    totalIncome: 5000,
-    totalExpenses: 3200,
-    balance: 1800,
-    month: new Date().getMonth() + 1,
-    year: new Date().getFullYear(),
+  //Agora é definido um array de MonthlySummary. Responsável por armazenar os dados simulados de resumo mensal.
+  private sampleSummaries: MonthlySummary = {
+    totalIncome: 100,
+    totalExpenses: 100,
+    balance: 0,
+    month: 1,
+    year: 2021,
+    categoryBreakdown: [
+      {
+        categoryId: '1',
+        categoryName: 'Test',
+        amount: 100,
+        percentage: 10,
+      },
+    ],
   };
 
-  getMonthlySummary(): Observable<MonthlySummary> {
+  getMonthlySummaries(): Observable<MonthlySummary[]> {
     // Retorna um Observable contendo os dados de exemplo
-    return of(this.sampleSummary);
+    return of([this.sampleSummaries]);
   }
   constructor() {}
 }
