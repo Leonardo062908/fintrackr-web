@@ -1,7 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FtCardComponent } from '../../shared/ui/cards/ft-card/ft-card.component';
 import { FtPageHeaderComponent } from '../../shared/ui/pageheader/ft-page-header/ft-page-header.component';
+import { Init } from 'node:v8';
+import { Observable } from 'rxjs';
+import { DashboardMockService } from '../../core/services/dashboard-mock.service';
+import { MonthlySummary } from '../../core/models/monthly-summary.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,4 +13,14 @@ import { FtPageHeaderComponent } from '../../shared/ui/pageheader/ft-page-header
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
-export class DashboardComponent {}
+export class DashboardComponent implements OnInit {
+  monthlySummary$!: Observable<MonthlySummary>;
+  nextActions$!: Observable<string[]>;
+
+  constructor(private dashboardService: DashboardMockService) {}
+
+  ngOnInit(): void {
+    this.monthlySummary$ = this.dashboardService.getMonthlySummary();
+    this.nextActions$ = this.dashboardService.getNextActions();
+  }
+}
