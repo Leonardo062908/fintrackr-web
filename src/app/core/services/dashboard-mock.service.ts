@@ -18,13 +18,13 @@ export class DashboardMockService {
     categoryBreakdown: [
       {
         categoryId: '1',
-        categoryName: 'Aliementação',
+        categoryName: 'Alimentação',
         amount: 800,
         percentage: 25,
       },
       {
         categoryId: '2',
-        categoryName: 'Alguel',
+        categoryName: 'Aluguel',
         amount: 1500,
         percentage: 47,
       },
