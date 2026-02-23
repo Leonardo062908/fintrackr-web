@@ -12,24 +12,43 @@
   }
 }
 
-h2 {
-  font-size: 1.1rem;
-  margin-bottom: 0.75rem;
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--ft-border);
+
+  &:last-child {
+    border-bottom: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding-top: 1rem;
+    margin-top: 0.5rem;
+    border-top: 1px solid var(--ft-border);
+  }
+}
+.summary-label {
   color: var(--ft-text);
-}
-
-p {
   font-size: 0.9rem;
-  color: var(--ft-text-secondary);
+
+  &.income {
+    color: var(--ft-accent);
+  }
+
+  &.expense {
+    color: var(--ft-accent-error);
+  }
+
+  &.positive {
+    color: var(--ft-accent);
+  }
+
+  &.negative {
+    color: var(--ft-accent-error);
+  }
 }
 
-li {
-  font-size: 0.9rem;
-  color: var(--ft-text-secondary);
-}
-
-ul {
-  margin: 0;
-  padding-left: 1.25rem;
-  list-style-type: disc;
+.summary-value {
+  font-weight: 600;
 }
