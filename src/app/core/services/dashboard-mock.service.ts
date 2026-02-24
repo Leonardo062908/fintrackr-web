@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, retryWhen } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { MonthlySummary } from '../models/monthly-summary.model';
 import { Goal, GoalStatus, GoalType } from '../models/goal.model';
 
@@ -72,5 +72,4 @@ export class DashboardMockService {
       },
     ]);
   }
-  constructor() {}
 }
