@@ -1,14 +1,47 @@
-.transactions {
-  width: 100%;
-}
-
-.transactions__placeholder {
+.transactions-content {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-  background-color: var(--ft-bg-secondary);
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.transaction-item {
+  padding: 1rem;
   border-radius: 0.75rem;
-  padding: 1.5rem;
+  background: var(--ft-bg-secondary);
+  border: 1px solid var(--ft-border);
+}
+.transaction-item-amount {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.transaction-item--income .transaction-item-amount {
+  color: var(--ft-income, #059669);
+}
+.transaction-item--expense .transaction-item-amount {
+  color: var(--ft-expense, #dc2626);
+}
+.transaction-item-type {
+  display: inline-block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  background: var(--ft-border);
+}
+.transaction-item-description {
+  margin: 0.5rem 0 0;
+  color: var(--ft-text-secondary);
+}
+.transaction-item-date {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--ft-text-muted, #9ca3af);
+}
+.transactions-empty {
+  text-align: center;
+  padding: 2rem;
+  color: var(--ft-text-secondary);
+  background: var(--ft-bg-secondary);
+  border-radius: 0.75rem;
 }
