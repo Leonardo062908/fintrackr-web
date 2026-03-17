@@ -1,32 +1,35 @@
-<section class="transactions">
-  <app-ft-page-header
-    title="Transações"
-    subtitle="Gerencie suas receitas e despesas"
-  >
-  </app-ft-page-header>
+<div class="transactions-content" *ngIf="transactions$ | async as transactions">
+  <ng-container *ngIf="transactions.length > 0; else empty">
+    <article
+      *ngFor="let t of transactions"
+      class="transaction-item"
+      [class.transaction-item--income]="t.type === transactionTypeIncome"
+      [class.transaction-item--expense]="t.type === transactionTypeExpense"
+    >
+      <span class="transaction-item-amount">{{
+        t.amount | currency: "BRL"
+      }}</span>
 
-  <div class="transactions__placeholder">
-    <ng-container *ngIf="transactions$ | async as transactions">
-      <div *ngIf="transactions.length > 0; else empty">
-        <article *ngFor="let transaction of transactions">
-          <p>{{ transaction.amount | currency: "BRL" }}</p>
-          <p>
-            {{
-              transaction.type === transactionTypeIncome ? "Receita" : "Despesa"
-            }}
-          </p>
-          <p>{{ transaction.description }}</p>
-          <p>{{ transaction.transactionDate | date: "dd/MM/yyyy" }}</p>
-          <p>{{ transaction.id }}</p>
-          <p>{{ transaction.accountId }}</p>
-          <p>{{ transaction.categoryId }}</p>
-          <a routerLink="/transactions/{{ transaction.id }}/edit">Editar</a>
-          <a routerLink="/transactions/{{ transaction.id }}/delete">Excluir</a>
-        </article>
+      <span class="transaction-item-type">
+        {{ t.type === transactionTypeIncome ? "Receita" : "Despesa" }}
+      </span>
+
+      <p class="transaction-item-description">{{ t.description }}</p>
+
+      <time class="transaction-item-date">
+        {{ t.transactionDate | date: "dd/MM/yyyy" }}
+      </time>
+
+      <div class="transaction-item-actions">
+        <a [routerLink]="['/transactions', t.id, 'edit']">Editar</a>
+        <a [routerLink]="['/transactions', t.id, 'delete']">Excluir</a>
       </div>
-    </ng-container>
-    <ng-template #empty>
-      <p>Nenhuma transação</p>
-    </ng-template>
-  </div>
-</section>
+    </article>
+  </ng-container>
+
+  <ng-template #empty>
+    <p class="transactions-empty">
+      Nenhuma transação ainda. Crie a primeira para começar.
+    </p>
+  </ng-template>
+</div>
