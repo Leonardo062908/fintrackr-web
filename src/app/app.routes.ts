@@ -15,28 +15,58 @@ export const routes: Routes = [
         path: 'dashboard',
         loadComponent: () =>
           import('./features/dashboard/dashboard.component').then(
-            (m) => m.DashboardComponent
+            (m) => m.DashboardComponent,
           ),
       },
       {
         path: 'transactions',
         loadComponent: () =>
-          import('./features/transactions/transactions.component').then(
-            (m) => m.TransactionsComponent
+          import('./features/transactions/transactions-shell.component').then(
+            (m) => m.TransactionsShellComponent,
           ),
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/transactions/transactions.component').then(
+                (m) => m.TransactionsComponent,
+              ),
+          },
+          {
+            path: 'new',
+            loadComponent: () =>
+              import('./features/transactions/transaction-form.component').then(
+                (m) => m.TransactionFormComponent,
+              ),
+          },
+          {
+            path: ':id/edit',
+            loadComponent: () =>
+              import('./features/transactions/transaction-form.component').then(
+                (m) => m.TransactionFormComponent,
+              ),
+          },
+          {
+            path: ':id/delete',
+            loadComponent: () =>
+              import('./features/transactions/transaction-delete.component').then(
+                (m) => m.TransactionDeleteComponent,
+              ),
+          },
+        ],
       },
       {
         path: 'goals',
         loadComponent: () =>
           import('./features/goals/goals.component').then(
-            (m) => m.GoalsComponent
+            (m) => m.GoalsComponent,
           ),
       },
       {
         path: 'settings',
         loadComponent: () =>
           import('./features/settings/settings.component').then(
-            (m) => m.SettingsComponent
+            (m) => m.SettingsComponent,
           ),
       },
       // Futuras rotas que usam o layout principal:
