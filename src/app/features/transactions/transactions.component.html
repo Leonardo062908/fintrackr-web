@@ -1,35 +1,50 @@
-<div class="transactions-content" *ngIf="transactions$ | async as transactions">
-  <ng-container *ngIf="transactions.length > 0; else empty">
-    <article
-      *ngFor="let t of transactions"
-      class="transaction-item"
-      [class.transaction-item--income]="t.type === transactionTypeIncome"
-      [class.transaction-item--expense]="t.type === transactionTypeExpense"
-    >
-      <span class="transaction-item-amount">{{
-        t.amount | currency: "BRL"
-      }}</span>
+<section class="transactions-page">
+  <app-ft-page-header
+    title="Transações"
+    subtitle="Acompanhe entradas e saídas. Os dados ficam salvos neste navegador."
+  >
+  </app-ft-page-header>
 
-      <span class="transaction-item-type">
-        {{ t.type === transactionTypeIncome ? "Receita" : "Despesa" }}
-      </span>
+  <div class="transactions-toolbar">
+    <a routerLink="/transactions/new" class="btn-new">Nova transação</a>
+  </div>
 
-      <p class="transaction-item-description">{{ t.description }}</p>
+  <div
+    class="transactions-content"
+    *ngIf="transactions$ | async as transactions"
+  >
+    <ng-container *ngIf="transactions.length > 0; else empty">
+      <article
+        *ngFor="let t of transactions"
+        class="transaction-item"
+        [class.transaction-item--income]="t.type === transactionTypeIncome"
+        [class.transaction-item--expense]="t.type === transactionTypeExpense"
+      >
+        <span class="transaction-item-amount">{{
+          t.amount | currency: "BRL"
+        }}</span>
 
-      <time class="transaction-item-date">
-        {{ t.transactionDate | date: "dd/MM/yyyy" }}
-      </time>
+        <span class="transaction-item-type">
+          {{ t.type === transactionTypeIncome ? "Receita" : "Despesa" }}
+        </span>
 
-      <div class="transaction-item-actions">
-        <a [routerLink]="['/transactions', t.id, 'edit']">Editar</a>
-        <a [routerLink]="['/transactions', t.id, 'delete']">Excluir</a>
-      </div>
-    </article>
-  </ng-container>
+        <p class="transaction-item-description">{{ t.description }}</p>
 
-  <ng-template #empty>
-    <p class="transactions-empty">
-      Nenhuma transação ainda. Crie a primeira para começar.
-    </p>
-  </ng-template>
-</div>
+        <time class="transaction-item-date">
+          {{ t.transactionDate | date: "dd/MM/yyyy" }}
+        </time>
+
+        <div class="transaction-item-actions">
+          <a [routerLink]="['/transactions', t.id, 'edit']">Editar</a>
+          <a [routerLink]="['/transactions', t.id, 'delete']">Excluir</a>
+        </div>
+      </article>
+    </ng-container>
+
+    <ng-template #empty>
+      <p class="transactions-empty">
+        Nenhuma transação ainda. Crie a primeira para começar.
+      </p>
+    </ng-template>
+  </div>
+</section>
