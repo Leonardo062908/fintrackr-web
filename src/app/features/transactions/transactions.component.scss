@@ -1,3 +1,26 @@
+.transactions-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.transactions-toolbar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-new {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  background: var(--ft-accent, #2563eb);
+  color: #fff;
+}
+
 .transactions-content {
   display: flex;
   flex-direction: column;
@@ -44,4 +67,20 @@
   color: var(--ft-text-secondary);
   background: var(--ft-bg-secondary);
   border-radius: 0.75rem;
+}
+
+.transaction-item-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.transaction-item-actions a {
+  color: var(--ft-accent, #2563eb);
+  text-decoration: none;
+}
+
+.transaction-item-actions a:hover {
+  text-decoration: underline;
 }

@@ -1,0 +1,20 @@
+<section class="transaction-delete-page">
+  <app-ft-page-header
+    title="Excluir transação"
+    subtitle="Esta ação não pode ser desfeita."
+  >
+  </app-ft-page-header>
+
+  @if (transactionId) {
+    <p class="delete-summary">
+      Remover <strong>{{ description }}</strong
+      >?
+    </p>
+    <div class="delete-actions">
+      <button type="button" class="btn btn-danger" (click)="confirm()">
+        Excluir
+      </button>
+      <a routerLink="/transactions" class="btn btn-secondary">Cancelar</a>
+    </div>
+  }
+</section>
