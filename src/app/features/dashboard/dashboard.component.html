@@ -6,38 +6,156 @@
   </app-ft-page-header>
 
   <div class="dashboard-grid">
-    <app-ft-card title="Resumo do mês">
-      <ng-container *ngIf="monthlySummary$ | async as summary">
-        <div class="summary-item">
-          <span class="summary-label">Receitas: </span>
-          <span class="summary-value income">{{
-            summary.totalIncome | currency: "BRL"
-          }}</span>
-        </div>
-        <div class="summary-item">
-          <span class="summary-label">Despesas: </span>
-          <span class="summary-value expense">{{
-            summary.totalExpenses | currency: "BRL"
-          }}</span>
-        </div>
-        <div class="summary-item">
-          <span class="summary-label">Saldo: </span>
-          <span
-            class="summary-value"
-            [class.positive]="summary.balance >= 0"
-            [class.negative]="summary.balance < 0"
-          >
-            {{ summary.balance | currency: "BRL" }}
-          </span>
-        </div>
-      </ng-container>
-      <!-- Você pode adicionar um *else para mostrar "Carregando..." se quiser -->
-    </app-ft-card>
+    <!-- Card 1 — Resumo do mês -->
+    <div class="grid-cell grid-cell--summary">
+      <app-ft-card title="Resumo do mês">
+        <ng-container *ngIf="monthlySummary$ | async as summary">
+          <div class="summary-item">
+            <span class="summary-label">Receitas:</span>
+            <span class="summary-value income">{{
+              summary.totalIncome | currency: "BRL"
+            }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Despesas:</span>
+            <span class="summary-value expense">{{
+              summary.totalExpenses | currency: "BRL"
+            }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Saldo:</span>
+            <span
+              class="summary-value"
+              [class.positive]="summary.balance >= 0"
+              [class.negative]="summary.balance < 0"
+            >
+              {{ summary.balance | currency: "BRL" }}
+            </span>
+          </div>
+        </ng-container>
+      </app-ft-card>
+    </div>
 
-    <app-ft-card title="Próximos passos">
-      <ul *ngIf="nextActions$ | async as actions">
-        <li *ngFor="let action of actions">{{ action }}</li>
-      </ul>
-    </app-ft-card>
+    <!-- Card 2 — Saldo ao longo do tempo -->
+    <div class="grid-cell grid-cell--chart-main">
+      <app-ft-card title="Saldo ao longo do tempo">
+        @if (isBrowser) {
+          @if (hasBalanceLineData()) {
+            @if (balanceLineYAxisHint) {
+              <p class="chart-meta-hint">{{ balanceLineYAxisHint }}</p>
+            }
+            <div class="chart-container chart-container--line">
+              <canvas
+                baseChart
+                type="line"
+                [data]="balanceLineChartData"
+                [options]="balanceLineChartOptions"
+                [legend]="true"
+              >
+              </canvas>
+            </div>
+          } @else {
+            <p class="chart-empty">
+              Adicione transações para ver o saldo após cada movimentação, em
+              ordem de data.
+            </p>
+          }
+        } @else {
+          <p class="chart-ssr-hint">
+            O gráfico aparece no navegador após a hidratação.
+          </p>
+        }
+      </app-ft-card>
+    </div>
+
+    <!-- Card 3 — Receitas x despesas por período -->
+    <div class="grid-cell grid-cell--chart-bar">
+      <app-ft-card title="Receitas x despesas por período">
+        @if (isBrowser) {
+          @if (hasPeriodBarData()) {
+            @if (periodBarGroupingHint) {
+              <p class="chart-meta-hint">{{ periodBarGroupingHint }}</p>
+            }
+            <div class="chart-container chart-container--bar">
+              <canvas
+                baseChart
+                type="bar"
+                [data]="periodBarChartData"
+                [options]="periodBarChartOptions"
+                [legend]="true"
+              >
+              </canvas>
+            </div>
+          } @else {
+            <p class="chart-empty">
+              Adicione transações para comparar receitas e despesas por período.
+            </p>
+          }
+        } @else {
+          <p class="chart-ssr-hint">
+            O gráfico aparece no navegador após a hidratação.
+          </p>
+        }
+      </app-ft-card>
+    </div>
+
+    <!-- Card 4 — Últimas transações -->
+    <div class="grid-cell grid-cell--latest">
+      <app-ft-card title="Últimas transações">
+        @if (latestTransactions.length === 0) {
+          <p class="table-empty">Nenhuma transação cadastrada.</p>
+        } @else {
+          <div class="table-wrap">
+            <table class="tx-table">
+              <thead>
+                <tr>
+                  <th scope="col">Data</th>
+                  <th scope="col">Descrição</th>
+                  <th scope="col">Tipo</th>
+                  <th scope="col" class="tx-table__numeric">Valor</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (t of latestTransactions; track t.id) {
+                  <tr>
+                    <td>
+                      {{ t.transactionDate | date: "dd/MM/yyyy" }}
+                    </td>
+                    <td class="tx-table__desc">{{ t.description }}</td>
+                    <td>
+                      @if (t.type === TransactionType.Income) {
+                        <span class="badge badge--income">Receita</span>
+                      } @else {
+                        <span class="badge badge--expense">Despesa</span>
+                      }
+                    </td>
+                    <td
+                      class="tx-table__numeric"
+                      [class.tx-table__income]="
+                        t.type === TransactionType.Income
+                      "
+                      [class.tx-table__expense]="
+                        t.type === TransactionType.Expense
+                      "
+                    >
+                      {{ t.amount | currency: "BRL" }}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </app-ft-card>
+    </div>
+
+    <!-- Card 5 — Próximos passos -->
+    <div class="grid-cell grid-cell--next">
+      <app-ft-card title="Próximos passos">
+        <ul *ngIf="nextActions$ | async as actions" class="next-list">
+          <li *ngFor="let action of actions">{{ action }}</li>
+        </ul>
+      </app-ft-card>
+    </div>
   </div>
 </section>

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 import { DashboardComponent } from './dashboard.component';
 import { FtPageHeaderComponent } from '../../shared/ui/pageheader/ft-page-header/ft-page-header.component';
@@ -10,7 +11,8 @@ describe('DashboardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DashboardComponent, FtCardComponent, FtPageHeaderComponent]
+      imports: [DashboardComponent, FtCardComponent, FtPageHeaderComponent],
+      providers: [provideCharts(withDefaultRegisterables())],
     })
     .compileComponents();
 
