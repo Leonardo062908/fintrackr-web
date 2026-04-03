@@ -2,6 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { Transaction, TransactionType } from '../models/transaction.model';
+import { MonthlySummary } from '../models/monthly-summary.model';
 
 const STORAGE_KEY = 'fintrackr.transactions.v1';
 const DEFAULT_ACCOUNT_ID = 'account-1';
@@ -51,13 +52,94 @@ export class TransactionsService {
     return this._transactions$.pipe(map((list) => [...list]));
   }
 
+  /**
+   * Resumo do mês atual calculado a partir das transações reais.
+   * Útil para o Card "Resumo do mês" no dashboard.
+   */
+  getMonthlySummaryCurrentMonth(): Observable<MonthlySummary> {
+    const now = new Date();
+    const month = now.getMonth() + 1;
+    const year = now.getFullYear();
+    return this.getMonthlySummary(month, year);
+  }
+
+  /**
+   * Resumo de um mês específico calculado a partir das transações reais.
+   */
+  getMonthlySummary(month: number, year: number): Observable<MonthlySummary> {
+    return this.getTransactions().pipe(
+      map((transactions) =>
+        this.computeMonthlySummary(transactions, month, year),
+      ),
+    );
+  }
+
+  private computeMonthlySummary(
+    transactions: Transaction[],
+    month: number,
+    year: number,
+  ): MonthlySummary {
+    const inMonth = transactions.filter((t) => {
+      const dt = t.transactionDate;
+      return dt.getFullYear() === year && dt.getMonth() + 1 === month;
+    });
+
+    let totalIncome = 0;
+    let totalExpenses = 0;
+    const expenseByCategory = new Map<
+      string,
+      { categoryId: string; categoryName: string; amount: number }
+    >();
+
+    for (const t of inMonth) {
+      if (t.type === TransactionType.Income) {
+        totalIncome += t.amount;
+        continue;
+      }
+
+      totalExpenses += t.amount;
+
+      const categoryId = t.categoryId ?? 'uncategorized';
+      const categoryName =
+        typeof t.categoryId === 'string'
+          ? `Categoria ${categoryId}`
+          : 'Sem categoria';
+
+      const prev = expenseByCategory.get(categoryId) ?? {
+        categoryId,
+        categoryName,
+        amount: 0,
+      };
+
+      prev.amount += t.amount;
+      expenseByCategory.set(categoryId, prev);
+    }
+
+    const balance = totalIncome - totalExpenses;
+    const categoryBreakdown = [...expenseByCategory.values()]
+      .sort((a, b) => b.amount - a.amount)
+      .map((row) => ({
+        categoryId: row.categoryId,
+        categoryName: row.categoryName,
+        amount: row.amount,
+        percentage: totalExpenses > 0 ? (row.amount / totalExpenses) * 100 : 0,
+      }));
+
+    return {
+      totalIncome,
+      totalExpenses,
+      balance,
+      month,
+      year,
+      categoryBreakdown,
+    };
+  }
+
   getTransaction(id: string): Transaction | undefined {
     return this._transactions$.value.find((t) => t.id === id);
   }
 
-  addTransaction(
-    draft: Omit<Transaction, 'id' | 'createdAt'>,
-  ): void {
+  addTransaction(draft: Omit<Transaction, 'id' | 'createdAt'>): void {
     const id = this.newId();
     const createdAt = new Date();
     const next = [...this._transactions$.value, { ...draft, id, createdAt }];
