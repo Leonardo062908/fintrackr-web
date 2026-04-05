@@ -143,7 +143,8 @@ export class DashboardComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.monthlySummary$ = this.dashboardService.getMonthlySummary();
+    this.monthlySummary$ =
+      this.transactionsService.getMonthlySummaryCurrentMonth();
     this.nextActions$ = this.dashboardService.getNextActions();
 
     this.transactionsService
