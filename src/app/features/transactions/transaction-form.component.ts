@@ -45,20 +45,33 @@ export class TransactionFormComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    if (!id) {
+    if (id) {
+      const existing = this.transactionsService.getTransaction(id);
+      if (!existing) {
+        void this.router.navigate(['/transactions']);
+        return;
+      }
+      this.editId = id;
+      this.form.patchValue({
+        type: existing.type,
+        amount: existing.amount,
+        description: existing.description,
+        transactionDate: this.toDateInputValue(existing.transactionDate),
+      });
       return;
     }
-    const existing = this.transactionsService.getTransaction(id);
-    if (!existing) {
-      void this.router.navigate(['/transactions']);
+
+    const monthParam = this.route.snapshot.queryParamMap.get('month');
+    if (monthParam && /^\d{4}-(0[1-9]|1[0-2])$/.test(monthParam)) {
+      this.form.patchValue({
+        transactionDate: `${monthParam}-01`,
+      });
       return;
     }
-    this.editId = id;
+
+    const today = new Date();
     this.form.patchValue({
-      type: existing.type,
-      amount: existing.amount,
-      description: existing.description,
-      transactionDate: this.toDateInputValue(existing.transactionDate),
+      transactionDate: this.toDateInputValue(today),
     });
   }
 
