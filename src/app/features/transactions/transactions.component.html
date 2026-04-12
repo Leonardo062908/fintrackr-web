@@ -1,50 +1,125 @@
 <section class="transactions-page">
   <app-ft-page-header
     title="Transações"
-    subtitle="Acompanhe entradas e saídas. Os dados ficam salvos neste navegador."
+    subtitle="Organize por mês como em um calendário. Abra o mês para ver e editar lançamentos."
   >
   </app-ft-page-header>
 
   <div class="transactions-toolbar">
+    <div class="year-nav" role="group" aria-label="Selecionar ano">
+      <button
+        type="button"
+        class="year-nav-btn"
+        (click)="previousYear()"
+        aria-label="Ano anterior"
+      >
+        ‹
+      </button>
+      <span class="year-nav-label">{{ year() }}</span>
+      <button
+        type="button"
+        class="year-nav-btn"
+        (click)="nextYear()"
+        aria-label="Próximo ano"
+      >
+        ›
+      </button>
+    </div>
     <a routerLink="/transactions/new" class="btn-new">Nova transação</a>
   </div>
 
-  <div
-    class="transactions-content"
-    *ngIf="transactions$ | async as transactions"
-  >
-    <ng-container *ngIf="transactions.length > 0; else empty">
-      <article
-        *ngFor="let t of transactions"
-        class="transaction-item"
-        [class.transaction-item--income]="t.type === transactionTypeIncome"
-        [class.transaction-item--expense]="t.type === transactionTypeExpense"
+  <div class="transactions-calendar">
+    <article
+      *ngFor="let m of calendarMonths()"
+      class="month-block"
+      [class.month-block--expanded]="expandedMonthKey() === m.monthKey"
+    >
+      <button
+        type="button"
+        class="month-block-header"
+        (click)="toggleMonth(m.monthKey)"
+        [attr.aria-expanded]="expandedMonthKey() === m.monthKey"
+        [attr.aria-controls]="'month-panel-' + m.monthKey"
+        [id]="'month-trigger-' + m.monthKey"
       >
-        <span class="transaction-item-amount">{{
-          t.amount | currency: "BRL"
-        }}</span>
-
-        <span class="transaction-item-type">
-          {{ t.type === transactionTypeIncome ? "Receita" : "Despesa" }}
+        <span class="month-block-title">{{ m.label }}</span>
+        <span class="month-block-count" *ngIf="m.transactionCount > 0">
+          {{ m.transactionCount }}
+          {{ m.transactionCount === 1 ? "lançamento" : "lançamentos" }}
         </span>
+        <span
+          class="month-block-count month-block-count--empty"
+          *ngIf="m.transactionCount === 0"
+        >
+          Vazio
+        </span>
+        <span class="month-block-totals">
+          <span
+            class="month-block-total month-block-total--in"
+            *ngIf="m.incomeTotal > 0"
+          >
+            +{{ m.incomeTotal | currency: "BRL" : "symbol" : "1.0-0" }}
+          </span>
+          <span
+            class="month-block-total month-block-total--out"
+            *ngIf="m.expenseTotal > 0"
+          >
+            −{{ m.expenseTotal | currency: "BRL" : "symbol" : "1.0-0" }}
+          </span>
+        </span>
+      </button>
 
-        <p class="transaction-item-description">{{ t.description }}</p>
-
-        <time class="transaction-item-date">
-          {{ t.transactionDate | date: "dd/MM/yyyy" }}
-        </time>
-
-        <div class="transaction-item-actions">
-          <a [routerLink]="['/transactions', t.id, 'edit']">Editar</a>
-          <a [routerLink]="['/transactions', t.id, 'delete']">Excluir</a>
+      <div
+        class="month-block-body"
+        *ngIf="expandedMonthKey() === m.monthKey"
+        [id]="'month-panel-' + m.monthKey"
+        role="region"
+        [attr.aria-labelledby]="'month-trigger-' + m.monthKey"
+      >
+        <div class="month-block-toolbar">
+          <a
+            [routerLink]="['/transactions/new']"
+            [queryParams]="{ month: m.monthKey }"
+            class="btn-add-month"
+          >
+            Adicionar neste mês
+          </a>
         </div>
-      </article>
-    </ng-container>
 
-    <ng-template #empty>
-      <p class="transactions-empty">
-        Nenhuma transação ainda. Crie a primeira para começar.
-      </p>
-    </ng-template>
+        <p *ngIf="m.transactions.length === 0" class="month-block-empty">
+          Nenhuma transação neste mês. Use o botão acima para criar a primeira.
+        </p>
+
+        <div *ngIf="m.transactions.length > 0" class="month-block-list">
+          <article
+            *ngFor="let t of m.transactions"
+            class="transaction-item"
+            [class.transaction-item--income]="t.type === transactionTypeIncome"
+            [class.transaction-item--expense]="
+              t.type === transactionTypeExpense
+            "
+          >
+            <span class="transaction-item-amount">{{
+              t.amount | currency: "BRL"
+            }}</span>
+
+            <span class="transaction-item-type">
+              {{ t.type === transactionTypeIncome ? "Receita" : "Despesa" }}
+            </span>
+
+            <p class="transaction-item-description">{{ t.description }}</p>
+
+            <time class="transaction-item-date">
+              {{ t.transactionDate | date: "dd/MM/yyyy" }}
+            </time>
+
+            <div class="transaction-item-actions">
+              <a [routerLink]="['/transactions', t.id, 'edit']">Editar</a>
+              <a [routerLink]="['/transactions', t.id, 'delete']">Excluir</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </article>
   </div>
 </section>
