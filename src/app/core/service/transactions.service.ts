@@ -5,35 +5,12 @@ import { Transaction, TransactionType } from '../models/transaction.model';
 import { MonthlySummary } from '../models/monthly-summary.model';
 
 const STORAGE_KEY = 'fintrackr.transactions.v1';
-const DEFAULT_ACCOUNT_ID = 'account-1';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TransactionsService {
   private readonly platformId = inject(PLATFORM_ID);
-
-  private readonly MOCK_TRANSACTIONS: Transaction[] = [
-    {
-      id: '1',
-      accountId: DEFAULT_ACCOUNT_ID,
-      type: TransactionType.Income,
-      amount: 2500,
-      description: 'Salário',
-      transactionDate: new Date(),
-      createdAt: new Date(),
-    },
-    {
-      id: '2',
-      accountId: 'account-1',
-      categoryId: 'cat-1',
-      type: TransactionType.Expense,
-      amount: 350,
-      description: 'Supermercado',
-      transactionDate: new Date(),
-      createdAt: new Date(),
-    },
-  ];
 
   private readonly _transactions$ = new BehaviorSubject<Transaction[]>([]);
 
@@ -172,14 +149,14 @@ export class TransactionsService {
 
   private loadInitial(): Transaction[] {
     if (!isPlatformBrowser(this.platformId)) {
-      return this.cloneList(this.MOCK_TRANSACTIONS);
+      return [];
     }
     const raw = localStorage.getItem(STORAGE_KEY);
     const parsed = this.parseStored(raw);
     if (parsed !== null) {
       return parsed;
     }
-    return this.cloneList(this.MOCK_TRANSACTIONS);
+    return [];
   }
 
   private persist(): void {
@@ -269,10 +246,6 @@ export class TransactionsService {
       return isNaN(+d) ? null : d;
     }
     return null;
-  }
-
-  private cloneList(list: Transaction[]): Transaction[] {
-    return list.map((t) => ({ ...t }));
   }
 
   private newId(): string {
